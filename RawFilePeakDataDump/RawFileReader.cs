@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThermoRawFileReaderDLL;
-using ThermoRawFileReaderDLL.FinniganFileIO;
+using ThermoRawFileReader;
 
 namespace RawFilePeakDataDump
 {
@@ -65,7 +64,7 @@ namespace RawFilePeakDataDump
             }
         }
 
-        public List<XRawFileIO.udtFTLabelInfoType> GetScanData(int scan)
+        public List<udtFTLabelInfoType> GetScanData(int scan)
         {
             clsScanInfo scanInfo;
             if (_rawFile.GetScanInfo(scan, out scanInfo))
@@ -83,9 +82,9 @@ namespace RawFilePeakDataDump
             return null;
         }
 
-        public List<XRawFileIO.udtFTLabelInfoType> GetLabelData(int scan)
+        public List<udtFTLabelInfoType> GetLabelData(int scan)
         {
-            XRawFileIO.udtFTLabelInfoType[] labelData;
+            udtFTLabelInfoType[] labelData;
 
             _rawFile.GetScanLabelData(scan, out labelData);
 
@@ -97,7 +96,7 @@ namespace RawFilePeakDataDump
             return null;
         }
 
-        public List<XRawFileIO.udtFTLabelInfoType> GetPeakData(int scan)
+        public List<udtFTLabelInfoType> GetPeakData(int scan)
         {
             double[,] peakData;
 
@@ -105,10 +104,10 @@ namespace RawFilePeakDataDump
 
             if (peakData.Length > 0)
             {
-                var data = new List<XRawFileIO.udtFTLabelInfoType>(dataCount);
+                var data = new List<udtFTLabelInfoType>(dataCount);
                 for (int i = 0; i < dataCount; i++)
                 {
-                    var peak = new XRawFileIO.udtFTLabelInfoType();
+                    var peak = new udtFTLabelInfoType();
                     peak.Mass = peakData[0, i];
                     peak.Intensity = peakData[1, i];
                     data.Add(peak);

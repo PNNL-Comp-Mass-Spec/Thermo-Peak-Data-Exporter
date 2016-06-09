@@ -39,8 +39,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ThermoRawFileReaderDLL">
-      <HintPath>..\..\..\git\Thermo-Raw-File-Reader\bin\Debug\ThermoRawFileReaderDLL.dll</HintPath>
+    <Reference Include="ThermoRawFileReader">
+      <HintPath>..\lib\ThermoRawFileReader.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
