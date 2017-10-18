@@ -45,9 +45,12 @@ namespace RawFilePeakDataDump
 
             for (var i = _minScan; i <= _maxScan; i++)
             {
+                double rt = 0;
+                _rawFile.GetRetentionTime(i, out rt);
                 var scan = new RawLabelData()
                 {
                     ScanNumber = i,
+                    ScanTime = rt,
                     LabelData = GetScanData(i),
                 };
 

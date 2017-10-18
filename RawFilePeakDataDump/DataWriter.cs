@@ -18,7 +18,7 @@ namespace RawFilePeakDataDump
             {
                 rawReader.LoadFile();
 
-                writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", "Scan Number", "Mass", "Intensity", "Resolution",
+                writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}", "Scan Number", "RT", "Mass", "Intensity", "Resolution",
                     "Baseline", "Noise", "Charge");
 
                 foreach (var scan in rawReader.GetAllLabelData())
@@ -34,7 +34,7 @@ namespace RawFilePeakDataDump
                     });
                     foreach (var peak in scan.LabelData)
                     {
-                        writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", scan.ScanNumber, peak.Mass, peak.Intensity, peak.Resolution, peak.Baseline, peak.Noise, peak.Charge);
+                        writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}", scan.ScanNumber, scan.ScanTime, peak.Mass, peak.Intensity, peak.Resolution, peak.Baseline, peak.Noise, peak.Charge);
                     }
                 }
             }

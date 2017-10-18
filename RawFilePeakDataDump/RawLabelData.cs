@@ -6,6 +6,7 @@ namespace RawFilePeakDataDump
     public class RawLabelData
     {
         public int ScanNumber { get; set; }
+        public double ScanTime { get; set; }
         public List<udtFTLabelInfoType> LabelData { get; set; }
     }
 }
