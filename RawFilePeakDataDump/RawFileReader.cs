@@ -36,34 +36,52 @@ namespace RawFilePeakDataDump
             _rawFile.CloseRawFile();
         }
 
-        public IEnumerable<RawLabelData> GetAllLabelData()
+        public IEnumerable<RawLabelData> GetLabelData(CommandLineOptions options)
         {
             if (_rawFile == null)
             {
                 LoadFile();
             }
 
-            for (var i = _minScan; i <= _maxScan; i++)
+            if (options.MinScan < _minScan)
             {
-                double rt = 0;
-                _rawFile.GetRetentionTime(i, out rt);
-                var scan = new RawLabelData()
-                {
-                    ScanNumber = i,
-                    ScanTime = rt,
-                    LabelData = GetScanData(i),
-                };
+                options.MinScan = _minScan;
+            }
+            if (options.MaxScan > _maxScan || options.MaxScan < 0)
+            {
+                options.MaxScan = _maxScan;
+            }
+
+            for (var i = options.MinScan; i <= options.MaxScan; i++)
+            {
+                var data = GetScanData(i);
 
                 //XRawFileIO.udtMassPrecisionInfoType[] precisionInfo;
                 //_rawFile.GetScanPrecisionData(i, out precisionInfo);
                 //Console.WriteLine("PrecisionInfoCount: " + precisionInfo.Length);
 
-                if (scan.LabelData == null)
+                if (data == null)
                 {
                     continue;
                 }
 
-                yield return scan;
+                var maxInt = data.Max(x => x.Intensity);
+                var dataFiltered = data.Where(x => x.Intensity >= options.MinIntensityThreshold && x.Intensity / maxInt >= options.MinRelIntensityThresholdPct && options.MinMz <= x.Mass && x.Mass <= options.MaxMz).ToList();
+
+                if (dataFiltered.Count == 0)
+                {
+                    continue;
+                }
+
+                double rt = 0;
+                _rawFile.GetRetentionTime(i, out rt);
+
+                yield return new RawLabelData()
+                {
+                    ScanNumber = i,
+                    ScanTime = rt,
+                    LabelData = dataFiltered,
+                };
             }
         }
 

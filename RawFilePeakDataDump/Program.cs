@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using PRISM;
 
 namespace RawFilePeakDataDump
 {
@@ -7,36 +8,24 @@ namespace RawFilePeakDataDump
     {
         static void Main(string[] args)
         {
-            if (args.Length < 1)
+            var parser = new CommandLineParser<CommandLineOptions>();
+            var parsed = parser.ParseArgs(args);
+            var options = parsed.ParsedResults;
+            if (!parsed.Success || !options.Validate())
             {
-                Console.WriteLine("Usage: {0} <rawFilePath> [outputFilePath]", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".exe");
                 return;
             }
 
-            var rawFilePath = args[0];
-            string outputPath;
-            if (args.Length > 1)
+            using (var raw = new RawFileReader(options.RawFilePath))
+            using (var tsv = new ScanPeakDataWriter(options.OutputPath))
             {
-                outputPath = args[1];
-            }
-            else
-            {
-                outputPath = Path.ChangeExtension(rawFilePath, ".tsv");
-            }
+                raw.LoadFile();
 
-            if (!File.Exists(rawFilePath))
-            {
-                Console.WriteLine("Error: raw file \"{0}\" does not exist.", rawFilePath);
-                return;
-            }
-            if (!rawFilePath.ToLower().EndsWith(".raw"))
-            {
-                Console.WriteLine("Error: file \"{0}\" is not a raw file.", rawFilePath);
-                return;
-            }
+                // Uses a yield return IEnumerable to reduce memory requirements - we do not hold data from the whole file in memory, each scan is written right after it is read
+                var data = raw.GetLabelData(options);
 
-            var writer = new DataWriter(outputPath);
-            writer.WriteDataToFile(rawFilePath);
+                tsv.Write(data);
+            }
 
             return;
         }
