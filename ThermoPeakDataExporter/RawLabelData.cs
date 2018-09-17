@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ThermoRawFileReader;
 
-namespace RawFilePeakDataDump
+namespace ThermoPeakDataExporter
 {
     public class RawLabelData
     {

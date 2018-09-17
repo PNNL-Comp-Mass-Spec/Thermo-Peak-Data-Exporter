@@ -2,7 +2,7 @@
 using System.Linq;
 using CsvHelper.Configuration;
 
-namespace RawFilePeakDataDump
+namespace ThermoPeakDataExporter
 {
     public class ScanPeakData
     {

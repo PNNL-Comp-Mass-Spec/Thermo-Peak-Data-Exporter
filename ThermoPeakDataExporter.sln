@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThermoPeakDataExporter", "ThermoPeakDataExporter\ThermoPeakDataExporter.csproj", "{BBD72197-C627-400E-9714-BB6C74A7FBB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBD72197-C627-400E-9714-BB6C74A7FBB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBD72197-C627-400E-9714-BB6C74A7FBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBD72197-C627-400E-9714-BB6C74A7FBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBD72197-C627-400E-9714-BB6C74A7FBB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FA902EB-C45C-4A1C-88D6-4848F64B0F66}
+	EndGlobalSection
+EndGlobal

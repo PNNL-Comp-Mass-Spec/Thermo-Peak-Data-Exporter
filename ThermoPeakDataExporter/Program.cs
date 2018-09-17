@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using PRISM;
+using ThermoPeakDataExporter;
 
-namespace RawFilePeakDataDump
+namespace ThermoPeakDataExporter
 {
     public class Program
     {

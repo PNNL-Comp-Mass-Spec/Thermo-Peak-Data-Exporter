@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 
-namespace RawFilePeakDataDump
+namespace ThermoPeakDataExporter
 {
     public class ScanPeakDataWriter : IDisposable
     {

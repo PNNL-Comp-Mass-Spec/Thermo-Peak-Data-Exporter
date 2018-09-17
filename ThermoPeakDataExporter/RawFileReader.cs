@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ThermoRawFileReader;
 
-namespace RawFilePeakDataDump
+namespace ThermoPeakDataExporter
 {
     public class RawFileReader : IDisposable
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using PRISM;
 
-namespace RawFilePeakDataDump
+namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
