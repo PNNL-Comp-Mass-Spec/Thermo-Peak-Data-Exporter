@@ -8,28 +8,47 @@ namespace ThermoPeakDataExporter
 {
     public class ScanPeakDataWriter : clsEventNotifier, IDisposable
     {
-        private CsvWriter writer;
-        public string FilePath { get; private set; }
+        /// <summary>
+        /// TSV file writer
+        /// </summary>
+        private readonly CsvWriter mWriter;
 
+        /// <summary>
+        /// Output file path
+        /// </summary>
+        public string FilePath { get; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="outputPath"></param>
         public ScanPeakDataWriter(string outputPath)
         {
             FilePath = outputPath;
-            writer = new CsvWriter(new StreamWriter(new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)));
-            writer.Configuration.RegisterClassMap<ScanPeakData.ScanPeakDataClassMap>();
-            writer.Configuration.Delimiter = "\t";
+            mWriter = new CsvWriter(new StreamWriter(new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)));
+            mWriter.Configuration.RegisterClassMap<ScanPeakData.ScanPeakDataClassMap>();
+            mWriter.Configuration.Delimiter = "\t";
         }
 
         public void Dispose()
         {
-            writer?.Dispose();
+            mWriter?.Dispose();
         }
 
-        public void Write(IEnumerable<ScanPeakData> data)
+        /// <summary>
+        /// Append an enumerable list of ScanPeakData
+        /// </summary>
+        /// <param name="data"></param>
+        private void Write(IEnumerable<ScanPeakData> data)
         {
-            writer.WriteRecords(data);
+            mWriter.WriteRecords(data);
         }
 
-        public void Write(RawLabelData data)
+        /// <summary>
+        /// Append data for a single scan
+        /// </summary>
+        /// <param name="data"></param>
+        private void Write(RawLabelData data)
         {
             Write(ScanPeakData.ConvertOrdered(data));
         }

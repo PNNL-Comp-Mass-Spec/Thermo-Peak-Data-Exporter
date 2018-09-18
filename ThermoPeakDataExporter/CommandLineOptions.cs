@@ -6,18 +6,21 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        [Option("raw", ArgPosition = 1, Required = true, HelpText = "Path to .raw file", HelpShowsDefault = false)]
+        [Option("raw", "i", ArgPosition = 1, Required = true, HelpText = "Path to .raw file", HelpShowsDefault = false)]
         public string RawFilePath { get; set; }
 
-        [Option("tsv", ArgPosition = 2, HelpText = "Name/path of output file (Default: raw_file_name.tsv", HelpShowsDefault = false)]
+        [Option("tsv", "out", "o", ArgPosition = 2, HelpText = "Name/path of output file (Default: raw_file_name.tsv", HelpShowsDefault = false)]
         public string OutputPath { get; set; }
 
-        [Option("minInt", "minIntensity", HelpText = "Minimum intensity threshold")]
+        [Option("minInt", "minIntensity", HelpText = "Minimum intensity threshold (absolute value)")]
         public double MinIntensityThreshold { get; set; }
 
-        [Option("minRelInt", "minRelIntensity", HelpText = "Minimum relative intensity threshold", Min = 0, Max = 99)]
+        [Option("minRelInt", "minRelIntensity", HelpText = "Minimum relative intensity threshold (value between 0 and 99)", Min = 0, Max = 99)]
         public double MinRelIntensityThreshold { get; set; }
 
+        /// <summary>
+        /// Relative intensity threshold (value between 0 and 1)
+        /// </summary>
         public double MinRelIntensityThresholdPct { get; private set; }
 
         [Option("minScan", HelpText = "First scan to output")]

@@ -9,35 +9,52 @@ namespace ThermoPeakDataExporter
 {
     public class RawFileReader : clsEventNotifier, IDisposable
     {
-        private string _filePath;
-        private XRawFileIO _rawFile;
-        private int _minScan;
-        private int _maxScan;
+        private readonly string mFilePath;
+        private XRawFileIO mRawFileReader;
 
+        public int ScanMin { get; private set; }
+
+        public int ScanMax { get; private set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="filePath"></param>
         public RawFileReader(string filePath)
         {
-            _filePath = filePath;
-            _rawFile = null;
+            mFilePath = filePath;
+            mRawFileReader = null;
         }
 
+        /// <summary>
+        /// Open the raw file with a new instance of XRawFileIO
+        /// </summary>
         public void LoadFile()
         {
-            _rawFile = new XRawFileIO();
-            _rawFile.OpenRawFile(_filePath);
-            _minScan = 1;
-            _maxScan = _rawFile.GetNumScans();
+            mRawFileReader = new XRawFileIO();
+            mRawFileReader.OpenRawFile(mFilePath);
+            ScanMin = 1;
+            ScanMax = mRawFileReader.GetNumScans();
         }
 
+        /// <summary>
+        /// Close the raw file reader
+        /// </summary>
         public void Close()
         {
-            _rawFile.CloseRawFile();
+            mRawFileReader?.CloseRawFile();
         }
 
         public void Dispose()
         {
-            _rawFile.CloseRawFile();
+            mRawFileReader?.CloseRawFile();
         }
 
+        /// <summary>
+        /// Get the LabelData (if FTMS) or PeakData (if not FTMS) as an enumerable list
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public IEnumerable<RawLabelData> GetLabelData(CommandLineOptions options)
         {
             var currentTask = "Initializing";
@@ -70,58 +87,60 @@ namespace ThermoPeakDataExporter
             {
                 var data = GetScanData(i);
 
-                //XRawFileIO.udtMassPrecisionInfoType[] precisionInfo;
-                //_rawFile.GetScanPrecisionData(i, out precisionInfo);
-                //Console.WriteLine("PrecisionInfoCount: " + precisionInfo.Length);
+                // XRawFileIO.udtMassPrecisionInfoType[] precisionInfo;
+                // mRawFileReader.GetScanPrecisionData(i, out precisionInfo);
+                // Console.WriteLine("PrecisionInfoCount: " + precisionInfo.Length);
 
                 if (data == null)
-                {
                     continue;
-                }
 
                 var maxInt = data.Max(x => x.Intensity);
-                var dataFiltered = data.Where(x => x.Intensity >= options.MinIntensityThreshold && x.Intensity / maxInt >= options.MinRelIntensityThresholdPct && options.MinMz <= x.Mass && x.Mass <= options.MaxMz).ToList();
+
+                // Check for the maximum intensity being zero
+                if (Math.Abs(maxInt) < float.Epsilon)
+                    continue;
+
+                var dataFiltered = data.Where(x => x.Intensity >= options.MinIntensityThreshold &&
+                                                   x.Intensity / maxInt >= options.MinRelIntensityThresholdPct &&
+                                                   x.Mass >= options.MinMz &&
+                                                   x.Mass <= options.MaxMz).ToList();
 
                 if (dataFiltered.Count == 0)
-                {
                     continue;
-                }
 
-                double rt = 0;
-                _rawFile.GetRetentionTime(i, out rt);
+                mRawFileReader.GetRetentionTime(i, out var rt);
 
-                yield return new RawLabelData()
+                yield return new RawLabelData
                 {
                     ScanNumber = i,
                     ScanTime = rt,
                     LabelData = dataFiltered,
                 };
             }
+
         }
 
-        public List<udtFTLabelInfoType> GetScanData(int scan)
+        /// <summary>
+        /// Get the LabelData (if FTMS) or PeakData (if not FTMS)
+        /// </summary>
+        /// <param name="scanNumber"></param>
+        /// <returns></returns>
+        private List<udtFTLabelInfoType> GetScanData(int scanNumber)
         {
-            clsScanInfo scanInfo;
-            if (_rawFile.GetScanInfo(scan, out scanInfo))
-            {
-                if (scanInfo.IsFTMS)
-                {
-                    return GetLabelData(scan);
-                }
-                else
-                {
-                    return GetPeakData(scan);
-                }
-            }
+            if (!mRawFileReader.GetScanInfo(scanNumber, out clsScanInfo scanInfo))
+                return null;
 
-            return null;
+            return scanInfo.IsFTMS ? GetLabelData(scanNumber) : GetPeakData(scanNumber);
         }
 
-        public List<udtFTLabelInfoType> GetLabelData(int scan)
+        /// <summary>
+        /// Get the label data for the given scan
+        /// </summary>
+        /// <param name="scanNumber"></param>
+        /// <returns></returns>
+        private List<udtFTLabelInfoType> GetLabelData(int scanNumber)
         {
-            udtFTLabelInfoType[] labelData;
-
-            _rawFile.GetScanLabelData(scan, out labelData);
+            mRawFileReader.GetScanLabelData(scanNumber, out var labelData);
 
             if (labelData.Length > 0)
             {
@@ -131,27 +150,37 @@ namespace ThermoPeakDataExporter
             return null;
         }
 
-        public List<udtFTLabelInfoType> GetPeakData(int scan)
+        /// <summary>
+        /// Get the peak data for the given scan
+        /// </summary>
+        /// <param name="scanNumber"></param>
+        /// <returns></returns>
+        private List<udtFTLabelInfoType> GetPeakData(int scanNumber)
         {
-            double[,] peakData;
+            const int MAX_NUMBER_OF_PEAKS = 0;
+            const bool CENTROID_DATA = true;
 
-            var dataCount = _rawFile.GetScanData2D(scan, out peakData, 0, true);
+            var dataCount = mRawFileReader.GetScanData2D(scanNumber, out var peakData, MAX_NUMBER_OF_PEAKS, CENTROID_DATA);
 
-            if (peakData.Length > 0)
+            if (peakData.Length <= 0)
             {
-                var data = new List<udtFTLabelInfoType>(dataCount);
-                for (int i = 0; i < dataCount; i++)
-                {
-                    var peak = new udtFTLabelInfoType();
-                    peak.Mass = peakData[0, i];
-                    peak.Intensity = peakData[1, i];
-                    data.Add(peak);
-                }
-
-                return data;
+                OnWarningEvent(string.Format("GetScanData2D returned no data for scan {0}", scanNumber));
+                return null;
             }
 
-            return null;
+            var data = new List<udtFTLabelInfoType>(dataCount);
+            for (var i = 0; i < dataCount; i++)
+            {
+                var peak = new udtFTLabelInfoType
+                {
+                    Mass = peakData[0, i],
+                    Intensity = peakData[1, i]
+                };
+                data.Add(peak);
+            }
+
+            return data;
+
         }
     }
 }

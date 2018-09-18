@@ -6,39 +6,64 @@ namespace ThermoPeakDataExporter
 {
     public class ScanPeakData
     {
+        /// <summary>
+        /// Scan number
+        /// </summary>
         public int ScanNumber { get; set; }
+
+        /// <summary>
+        /// Acquisition time (min minutes)
+        /// </summary>
         public double ScanTime { get; set; }
 
         /// <summary>Peak m/z</summary>
         /// <remarks>This is observed m/z; it is not monoisotopic mass</remarks>
         public double Mass { get; set; }
 
-        /// <summary>Peak Intensity</summary>
+        /// <summary>
+        /// Peak Intensity
+        /// </summary>
         public double Intensity { get; set; }
 
-        /// <summary>Peak Resolution</summary>
+        /// <summary>
+        /// Peak Resolution
+        /// </summary>
         public double Resolution { get; set; }
 
-        /// <summary>Peak Baseline</summary>
+        /// <summary>
+        /// Peak Baseline
+        /// </summary>
         public double Baseline { get; set; }
 
-        /// <summary>Peak Noise</summary>
+        /// <summary>
+        /// Peak Noise
+        /// </summary>
         /// <remarks>For signal/noise ratio, see SignalToNoise</remarks>
         public double Noise { get; set; }
 
-        /// <summary>Peak Charge</summary>
+        /// <summary>
+        /// Peak Charge
+        /// </summary>
         /// <remarks>Will be 0 if the charge could not be determined</remarks>
         public double Charge { get; set; }
 
-        /// <summary>Signal to noise ratio</summary>
+        /// <summary>
+        /// Signal to noise ratio
+        /// </summary>
         /// <returns>Intensity divided by noise, or 0 if Noise is 0</returns>
         public double SignalToNoise { get; set; }
 
+
+        /// <summary>
+        /// Convert RawLabelData to an enumerable list of ScanPeakData
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IEnumerable<ScanPeakData> Convert(RawLabelData data)
         {
-            foreach (var peak in data.LabelData)
+            foreach (var peak in data.MSData)
             {
-                yield return new ScanPeakData()
+                yield return new ScanPeakData
                 {
                     ScanNumber = data.ScanNumber,
                     ScanTime = data.ScanTime,
@@ -52,11 +77,16 @@ namespace ThermoPeakDataExporter
             }
         }
 
+        /// <summary>
+        /// Sort label data by mass, then by intensity
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IEnumerable<ScanPeakData> ConvertOrdered(RawLabelData data)
         {
             foreach (var peak in data.LabelData.OrderBy(x => x.Mass).ThenBy(x => x.Intensity))
             {
-                yield return new ScanPeakData()
+                yield return new ScanPeakData
                 {
                     ScanNumber = data.ScanNumber,
                     ScanTime = data.ScanTime,
