@@ -114,9 +114,11 @@ namespace ThermoPeakDataExporter
                 {
                     ScanNumber = i,
                     ScanTime = rt,
-                    LabelData = dataFiltered,
+                    MSData = dataFiltered,
+                    MaxIntensity = maxInt
                 };
             }
+
 
         }
 

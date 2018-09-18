@@ -20,5 +20,9 @@ namespace ThermoPeakDataExporter
         /// </summary>
         public List<udtFTLabelInfoType> MSData { get; set; }
 
+        /// <summary>
+        /// Maximum intensity of the peaks in this scan
+        /// </summary>
+        public double MaxIntensity { get; set; }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using CsvHelper;
 using CsvHelper.Configuration;
 
 namespace ThermoPeakDataExporter
@@ -53,6 +55,11 @@ namespace ThermoPeakDataExporter
         /// <returns>Intensity divided by noise, or 0 if Noise is 0</returns>
         public double SignalToNoise { get; set; }
 
+        /// <summary>
+        /// Relative intensity (value between 0 and 100)
+        /// </summary>
+        /// <returns>Intensity of a peak divided by maximum intensity (in a given scan) times 100</returns>
+        public double RelativeIntensity { get; set; }
 
         /// <summary>
         /// Convert RawLabelData to an enumerable list of ScanPeakData
@@ -84,7 +91,14 @@ namespace ThermoPeakDataExporter
         /// <returns></returns>
         public static IEnumerable<ScanPeakData> ConvertOrdered(RawLabelData data)
         {
-            foreach (var peak in data.LabelData.OrderBy(x => x.Mass).ThenBy(x => x.Intensity))
+            double maxIntensity;
+
+            if (Math.Abs(data.MaxIntensity) < float.Epsilon)
+                maxIntensity = 1;
+            else
+                maxIntensity = data.MaxIntensity;
+
+            foreach (var peak in data.MSData.OrderBy(x => x.Mass).ThenBy(x => x.Intensity))
             {
                 yield return new ScanPeakData
                 {
@@ -96,6 +110,7 @@ namespace ThermoPeakDataExporter
                     Baseline = peak.Baseline,
                     Noise = peak.Noise,
                     SignalToNoise = peak.SignalToNoise,
+                    RelativeIntensity = peak.Intensity / maxIntensity * 100
                 };
             }
         }
@@ -113,6 +128,7 @@ namespace ThermoPeakDataExporter
                 Map(x => x.Noise).Name("Noise");
                 Map(x => x.Charge).Name("Charge");
                 Map(x => x.SignalToNoise).Name("SignalToNoise");
+                Map(x => x.RelativeIntensity).Name("RelativeIntensity").TypeConverter(new DoubleConverter(4));
             }
         }
     }
