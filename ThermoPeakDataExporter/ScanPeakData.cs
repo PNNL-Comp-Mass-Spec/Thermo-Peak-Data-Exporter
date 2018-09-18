@@ -115,21 +115,22 @@ namespace ThermoPeakDataExporter
             }
         }
 
-        public class ScanPeakDataClassMap : ClassMap<ScanPeakData>
+        public sealed class ScanPeakDataClassMap : ClassMap<ScanPeakData>
         {
             public ScanPeakDataClassMap()
             {
                 Map(x => x.ScanNumber).Name("Scan Number");
-                Map(x => x.ScanTime).Name("RT");
-                Map(x => x.Mass).Name("Mass");
-                Map(x => x.Intensity).Name("Intensity");
+                Map(x => x.ScanTime).Name("RT").TypeConverter(new DoubleConverter(4));
+                Map(x => x.Mass).Name("Mass").TypeConverter(new DoubleConverter(6));
+                Map(x => x.Intensity).Name("Intensity").TypeConverter(new DoubleConverter(4));
                 Map(x => x.Resolution).Name("Resolution");
-                Map(x => x.Baseline).Name("Baseline");
-                Map(x => x.Noise).Name("Noise");
+                Map(x => x.Baseline).Name("Baseline").TypeConverter(new DoubleConverter(4));
+                Map(x => x.Noise).Name("Noise").TypeConverter(new DoubleConverter(4));
                 Map(x => x.Charge).Name("Charge");
-                Map(x => x.SignalToNoise).Name("SignalToNoise");
+                Map(x => x.SignalToNoise).Name("SignalToNoise").TypeConverter(new DoubleConverter(4));
                 Map(x => x.RelativeIntensity).Name("RelativeIntensity").TypeConverter(new DoubleConverter(4));
             }
         }
+
     }
 }
