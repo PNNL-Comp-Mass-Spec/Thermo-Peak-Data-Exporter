@@ -1,11 +1,27 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using PRISM;
 
 namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
+        private const string PROGRAM_DATE = "September 17, 2018";
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public CommandLineOptions()
+        {
+            MinIntensityThreshold = 0;
+            MinRelIntensityThreshold = 0;
+            MinScan = -1;
+            MaxScan = -1;
+            MinMz = 0;
+            MaxMz = 10000000;
+        }
+
         [Option("raw", "i", ArgPosition = 1, Required = true, HelpText = "Path to .raw file", HelpShowsDefault = false)]
         public string RawFilePath { get; set; }
 
@@ -35,26 +51,30 @@ namespace ThermoPeakDataExporter
         [Option("maxMz", HelpText = "Highest m/z to output")]
         public double MaxMz { get; set; }
 
-        public CommandLineOptions()
+        public static string GetAppVersion()
         {
-            MinIntensityThreshold = 0;
-            MinRelIntensityThreshold = 0;
-            MinScan = -1;
-            MaxScan = -1;
-            MinMz = 0;
-            MaxMz = 10000000;
+            var version = Assembly.GetExecutingAssembly().GetName().Version + " (" + PROGRAM_DATE + ")";
+
+            return version;
         }
 
         public bool Validate()
         {
+
+            if (string.IsNullOrWhiteSpace(RawFilePath))
+            {
+                ConsoleMsgUtils.ShowError("Raw file path is not defined");
+                return false;
+            }
+
             if (!File.Exists(RawFilePath))
             {
-                Console.WriteLine("ERROR: raw file \"{0}\" does not exist.", RawFilePath);
+                ConsoleMsgUtils.ShowError(string.Format("ERROR: raw file \"{0}\" does not exist.", RawFilePath));
                 return false;
             }
             if (!RawFilePath.ToLower().EndsWith(".raw"))
             {
-                Console.WriteLine("ERROR: file \"{0}\" is not a raw file.", RawFilePath);
+                ConsoleMsgUtils.ShowError(string.Format("ERROR: file \"{0}\" is not a raw file.", RawFilePath));
                 return false;
             }
 
