@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CsvHelper;
 using CsvHelper.Configuration;
 
 namespace ThermoPeakDataExporter
@@ -60,29 +59,6 @@ namespace ThermoPeakDataExporter
         /// </summary>
         /// <returns>Intensity of a peak divided by maximum intensity (in a given scan) times 100</returns>
         public double RelativeIntensity { get; set; }
-
-        /// <summary>
-        /// Convert RawLabelData to an enumerable list of ScanPeakData
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static IEnumerable<ScanPeakData> Convert(RawLabelData data)
-        {
-            foreach (var peak in data.MSData)
-            {
-                yield return new ScanPeakData
-                {
-                    ScanNumber = data.ScanNumber,
-                    ScanTime = data.ScanTime,
-                    Mass = peak.Mass,
-                    Intensity = peak.Intensity,
-                    Resolution = peak.Resolution,
-                    Baseline = peak.Baseline,
-                    Noise = peak.Noise,
-                    SignalToNoise = peak.SignalToNoise,
-                };
-            }
-        }
 
         /// <summary>
         /// Sort label data by mass, then by intensity

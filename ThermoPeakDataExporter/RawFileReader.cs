@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using PRISM;
 using ThermoRawFileReader;
@@ -35,14 +34,6 @@ namespace ThermoPeakDataExporter
             mRawFileReader.OpenRawFile(mFilePath);
             ScanMin = 1;
             ScanMax = mRawFileReader.GetNumScans();
-        }
-
-        /// <summary>
-        /// Close the raw file reader
-        /// </summary>
-        public void Close()
-        {
-            mRawFileReader?.CloseRawFile();
         }
 
         public void Dispose()
