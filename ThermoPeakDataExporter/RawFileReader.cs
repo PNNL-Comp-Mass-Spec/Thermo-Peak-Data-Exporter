@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using PRISM;
 using ThermoRawFileReader;
 
 namespace ThermoPeakDataExporter
 {
-    public class RawFileReader : IDisposable
+    public class RawFileReader : clsEventNotifier, IDisposable
     {
         private string _filePath;
         private XRawFileIO _rawFile;
@@ -38,18 +40,30 @@ namespace ThermoPeakDataExporter
 
         public IEnumerable<RawLabelData> GetLabelData(CommandLineOptions options)
         {
-            if (_rawFile == null)
+            var currentTask = "Initializing";
+            try
             {
-                LoadFile();
-            }
 
-            if (options.MinScan < _minScan)
-            {
-                options.MinScan = _minScan;
+                if (mRawFileReader == null)
+                {
+                    currentTask = "Opening the .raw file";
+                    LoadFile();
+                }
+
+                currentTask = "Validating the scan range";
+                if (options.MinScan < ScanMin)
+                {
+                    options.MinScan = ScanMin;
+                }
+                if (options.MaxScan > ScanMax || options.MaxScan < 0)
+                {
+                    options.MaxScan = ScanMax;
+                }
+
             }
-            if (options.MaxScan > _maxScan || options.MaxScan < 0)
+            catch (Exception ex)
             {
-                options.MaxScan = _maxScan;
+                OnErrorEvent(string.Format("Exception {0}: {1}", currentTask, ex.Message), ex);
             }
 
             for (var i = options.MinScan; i <= options.MaxScan; i++)

@@ -6,7 +6,7 @@ using CsvHelper;
 
 namespace ThermoPeakDataExporter
 {
-    public class ScanPeakDataWriter : IDisposable
+    public class ScanPeakDataWriter : clsEventNotifier, IDisposable
     {
         private CsvWriter writer;
         public string FilePath { get; private set; }
@@ -34,12 +34,40 @@ namespace ThermoPeakDataExporter
             Write(ScanPeakData.ConvertOrdered(data));
         }
 
-        public void Write(IEnumerable<RawLabelData> data)
+        /// <summary>
+        /// Append an enumerable list of RawLabelData
+        /// </summary>
+        /// <param name="data">Enumerable list of RawLabelData</param>
+        /// <param name="scanCount">Number of scans in the .raw file; used to report progress</param>
+        public bool Write(IEnumerable<RawLabelData> data, int scanCount)
         {
-            foreach (var scan in data)
+            var currentScanNumber = 0;
+
+            try
             {
-                Write(scan);
+
+                foreach (var scan in data)
+                {
+                    currentScanNumber = scan.ScanNumber;
+                    Write(scan);
+
+                    if (scanCount > 0 && currentScanNumber % 100 == 0)
+                    {
+                        var percentComplete = currentScanNumber / (float)scanCount * 100;
+                        OnProgressUpdate("Processing scan " + currentScanNumber, percentComplete);
+                    }
+                }
+
+                mWriter.Flush();
+                return true;
             }
+            catch(Exception ex)
+            {
+                OnErrorEvent(string.Format("Exception processing scan {0}: {1}", currentScanNumber, ex.Message));
+                OnWarningEvent(clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                return false;
+            }
+
         }
     }
 }
