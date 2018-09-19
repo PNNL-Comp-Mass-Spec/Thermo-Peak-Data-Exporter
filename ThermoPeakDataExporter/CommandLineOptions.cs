@@ -37,7 +37,7 @@ namespace ThermoPeakDataExporter
         /// <summary>
         /// Relative intensity threshold (value between 0 and 1)
         /// </summary>
-        public double MinRelIntensityThresholdPct { get; private set; }
+        public double MinRelIntensityThresholdRatio { get; private set; }
 
         [Option("minScan", HelpText = "First scan to output")]
         public int MinScan { get; set; }
@@ -95,7 +95,7 @@ namespace ThermoPeakDataExporter
                 return false;
             }
 
-            MinRelIntensityThresholdPct = MinRelIntensityThreshold / 100d;
+            MinRelIntensityThresholdRatio = MinRelIntensityThreshold / 100d;
 
             return true;
         }
