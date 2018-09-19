@@ -31,7 +31,7 @@ namespace ThermoPeakDataExporter
                     ProgramInfo = "This program extracts peak intensity data from a Thermo raw file, " +
                                   "writing the mass and intensity information to a tab delimited text file (default extension .tsv).",
 
-                    ContactInfo = "Program written by Bryson Gibbons for the Department of Energy (PNNL, Richland, WA) in 2016" +
+                    ContactInfo = "Program written by Bryson Gibbons and Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2016" +
                                   Environment.NewLine + Environment.NewLine +
                                   "E-mail: proteomics@pnnl.gov" + Environment.NewLine +
                                   "Website: https://omics.pnl.gov or https://panomics.pnnl.gov or https://github.com/PNNL-Comp-Mass-Spec",

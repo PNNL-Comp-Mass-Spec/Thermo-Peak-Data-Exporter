@@ -11,7 +11,8 @@ ThermoPeakDataExporter.exe
  ThermoRawFilePath [/O:OutputTSVFilePath]
  [/minInt:MinimumIntensity] [/minRelInt:MinimumRelativeIntensity]
  [/minScan:ScanStart] [/maxScan:ScanEnd]
- [/minMz:MzStart] [/maxMz:MzEnd]
+ [/minMz:MzStart] [/maxMz:MzEnd] 
+ [/minSN:MinimumSignalToNoiseRatio]
 ```
 
 The input file name must end in .raw
@@ -26,6 +27,8 @@ Use /minRelInt to specify a minimum relative intensity threshold (value between 
 Use /minScan and /maxScan to limit the scan range of the exported data
 
 Use /minMz and /maxMz to limit the m/z range of the exported data
+
+Use /minSN to specify a minimum signal to noise ratio (minimum S/N)
 
 ## Example Output File
 
@@ -53,7 +56,7 @@ Use /minMz and /maxMz to limit the m/z range of the exported data
 
 ## Contacts
 
-Written by Bryson Gibbons for the Department of Energy (PNNL, Richland, WA) \
+Written by Bryson Gibbons and Matthew Monroe for the Department of Energy (PNNL, Richland, WA) \
 E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov \
 Website: https://omics.pnl.gov or https://panomics.pnl.gov/
 
