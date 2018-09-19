@@ -94,7 +94,8 @@ namespace ThermoPeakDataExporter
                 var dataFiltered = data.Where(x => x.Intensity >= options.MinIntensityThreshold &&
                                                    x.Intensity / maxInt >= options.MinRelIntensityThresholdRatio &&
                                                    x.Mass >= options.MinMz &&
-                                                   x.Mass <= options.MaxMz).ToList();
+                                                   x.Mass <= options.MaxMz &&
+                                                   x.SignalToNoise >= options.SignalToNoiseThreshold).ToList();
 
                 if (dataFiltered.Count == 0)
                     continue;

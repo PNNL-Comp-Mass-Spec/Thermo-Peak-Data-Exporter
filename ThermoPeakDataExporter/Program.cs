@@ -39,7 +39,8 @@ namespace ThermoPeakDataExporter
                     UsageExamples = {
                         exeName + " Dataset.raw",
                         exeName + " Dataset.raw /tsv:DatasetPeaks.tsv",
-                        exeName + " Dataset.raw /minRelInt:10"
+                        exeName + " Dataset.raw /minRelInt:10",
+                        exeName + " Dataset.raw /minSN:2"
                     }
                 };
 

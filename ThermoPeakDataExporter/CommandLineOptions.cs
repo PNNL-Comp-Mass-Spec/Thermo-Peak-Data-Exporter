@@ -9,6 +9,8 @@ namespace ThermoPeakDataExporter
     {
         private const string PROGRAM_DATE = "September 17, 2018";
 
+        private const int DEFAULT_MAX_MZ = 10000000;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -19,7 +21,8 @@ namespace ThermoPeakDataExporter
             MinScan = -1;
             MaxScan = -1;
             MinMz = 0;
-            MaxMz = 10000000;
+            MaxMz = DEFAULT_MAX_MZ;
+            SignalToNoiseThreshold = 0;
         }
 
         [Option("raw", "i", ArgPosition = 1, Required = true, HelpText = "Path to .raw file", HelpShowsDefault = false)]
@@ -50,6 +53,9 @@ namespace ThermoPeakDataExporter
 
         [Option("maxMz", HelpText = "Highest m/z to output")]
         public double MaxMz { get; set; }
+
+        [Option("minSN", "minSignalToNoise", HelpText = "Minimum S/N ratio")]
+        public double SignalToNoiseThreshold { get; set; }
 
         public static string GetAppVersion()
         {
