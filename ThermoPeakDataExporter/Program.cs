@@ -55,7 +55,7 @@ namespace ThermoPeakDataExporter
                 }
 
                 // Validate the options, including verifying that the .raw file exists
-                if (!options.Validate())
+                if (!options.ValidateArgs())
                 {
                     parser.PrintHelp();
                     Thread.Sleep(1500);
@@ -77,10 +77,10 @@ namespace ThermoPeakDataExporter
                     outputFile.Directory.Create();
                 }
 
+                options.OutputSetOptions();
+
                 currentTask = "instantiating RawFileReader and ScanPeakDataWriter";
                 mLastProgress = DateTime.UtcNow;
-
-                Console.WriteLine("Extracting data from " + options.RawFilePath);
 
                 using (var rawReader = new RawFileReader(options.RawFilePath))
                 using (var tsvWriter = new ScanPeakDataWriter(options.OutputPath))

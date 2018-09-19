@@ -7,7 +7,7 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        private const string PROGRAM_DATE = "September 17, 2018";
+        private const string PROGRAM_DATE = "September 18, 2018";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 
@@ -64,7 +64,40 @@ namespace ThermoPeakDataExporter
             return version;
         }
 
-        public bool Validate()
+        public void OutputSetOptions()
+        {
+            Console.WriteLine("ThermoPeakDataExporter, version " + GetAppVersion());
+            Console.WriteLine();
+            Console.WriteLine("Using options:");
+
+            Console.WriteLine(" Thermo Instrument file: {0}", RawFilePath);
+            Console.WriteLine(" Output file: {0}", OutputPath);
+
+            if (MinIntensityThreshold > 0)
+                Console.WriteLine(" Minimum Intensity: {0:F1}", MinIntensityThreshold);
+
+            if (MinRelIntensityThreshold > 0)
+                Console.WriteLine(" Minimum Relative Intensity: {0:F2}%", MinRelIntensityThreshold);
+
+            if (MinScan > -1)
+                Console.WriteLine(" Minimum Scan: {0}", MinScan);
+
+            if (MaxScan > -1)
+                Console.WriteLine(" Maximum Scan: {0}", MaxScan);
+
+            if (MinMz > 0)
+                Console.WriteLine(" Minimum m/z: {0}", MinMz);
+
+            if (MaxMz < DEFAULT_MAX_MZ)
+                Console.WriteLine(" Maximum m/z: {0}", MaxMz);
+
+            if (SignalToNoiseThreshold > 0)
+                Console.WriteLine(" Minimum S/N: {0:F1}", SignalToNoiseThreshold);
+
+            Console.WriteLine();
+        }
+
+        public bool ValidateArgs()
         {
 
             if (string.IsNullOrWhiteSpace(RawFilePath))
