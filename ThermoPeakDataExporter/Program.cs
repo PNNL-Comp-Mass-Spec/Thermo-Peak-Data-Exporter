@@ -133,7 +133,9 @@ namespace ThermoPeakDataExporter
 
             mLastProgress = DateTime.UtcNow;
 
-            ConsoleMsgUtils.ShowDebug(string.Format("{0:F1}%: {1}", percentComplete, progressMessage));
+            // Example progress message:
+            // 23.4% finished: Processing scan 34
+            ConsoleMsgUtils.ShowDebug(string.Format("{0:F1}% finished: {1}", percentComplete, progressMessage));
         }
 
         private static void ProcessingClass_ErrorEvent(string message, Exception ex)
