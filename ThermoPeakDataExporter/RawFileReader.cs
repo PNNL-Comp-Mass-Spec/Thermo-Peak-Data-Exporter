@@ -6,8 +6,10 @@ using ThermoRawFileReader;
 
 namespace ThermoPeakDataExporter
 {
-    public class RawFileReader : clsEventNotifier, IDisposable
+    public class RawFileReader : EventNotifier, IDisposable
     {
+        public const string GET_SCAN_DATA_WARNING = "GetScanData2D returned no data for scan";
+
         private readonly string mFilePath;
         private XRawFileIO mRawFileReader;
 

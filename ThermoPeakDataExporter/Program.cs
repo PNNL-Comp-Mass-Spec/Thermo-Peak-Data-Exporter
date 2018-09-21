@@ -119,9 +119,10 @@ namespace ThermoPeakDataExporter
 
         }
 
-        private static void RegisterEvents(clsEventNotifier processingClass)
+        private static void RegisterEvents(EventNotifier processingClass)
         {
             processingClass.ProgressUpdate += ProcessingClass_ProgressUpdate;
+            processingClass.DebugEvent += ProcessingClass_DebugEvent;
             processingClass.ErrorEvent += ProcessingClass_ErrorEvent;
             processingClass.WarningEvent += ProcessingClass_WarningEvent;
         }

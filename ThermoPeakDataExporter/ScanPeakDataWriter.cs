@@ -6,7 +6,7 @@ using PRISM;
 
 namespace ThermoPeakDataExporter
 {
-    public class ScanPeakDataWriter : clsEventNotifier, IDisposable
+    public class ScanPeakDataWriter : EventNotifier, IDisposable
     {
         /// <summary>
         /// TSV file writer
@@ -83,7 +83,7 @@ namespace ThermoPeakDataExporter
             catch(Exception ex)
             {
                 OnErrorEvent(string.Format("Exception processing scan {0}: {1}", currentScanNumber, ex.Message));
-                OnWarningEvent(clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                OnWarningEvent(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 return false;
             }
 
