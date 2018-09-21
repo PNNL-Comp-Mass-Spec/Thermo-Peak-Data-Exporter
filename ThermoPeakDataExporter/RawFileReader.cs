@@ -11,6 +11,7 @@ namespace ThermoPeakDataExporter
         public const string GET_SCAN_DATA_WARNING = "GetScanData2D returned no data for scan";
 
         private readonly string mFilePath;
+
         private XRawFileIO mRawFileReader;
 
         public int ScanMin { get; private set; }
@@ -160,7 +161,9 @@ namespace ThermoPeakDataExporter
 
             if (peakData.Length <= 0)
             {
-                OnWarningEvent(string.Format("GetScanData2D returned no data for scan {0}", scanNumber));
+                // Report message: GetScanData2D returned no data for scan 2760
+                // See, for example QC_Shew_13_04_2c_22Sep13_Cougar_13-06-16
+                OnWarningEvent(string.Format("{0} {1}", GET_SCAN_DATA_WARNING, scanNumber));
                 return null;
             }
 

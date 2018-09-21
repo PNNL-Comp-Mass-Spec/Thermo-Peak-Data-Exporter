@@ -136,7 +136,15 @@ namespace ThermoPeakDataExporter
 
             // Example progress message:
             // 23.4% finished: Processing scan 34
-            ConsoleMsgUtils.ShowDebug(string.Format("{0:F1}% finished: {1}", percentComplete, progressMessage));
+
+            const int emptyLinesBeforeMessage = 0;
+            ConsoleMsgUtils.ShowDebug(string.Format("{0:F1}% finished: {1}", percentComplete, progressMessage), "  ", emptyLinesBeforeMessage);
+        }
+
+        private static void ProcessingClass_DebugEvent(string message)
+        {
+            const int emptyLinesBeforeMessage = 0;
+            ConsoleMsgUtils.ShowDebug(message, "  ", emptyLinesBeforeMessage);
         }
 
         private static void ProcessingClass_ErrorEvent(string message, Exception ex)
@@ -146,7 +154,16 @@ namespace ThermoPeakDataExporter
 
         private static void ProcessingClass_WarningEvent(string message)
         {
-            ShowWarningMessage(message);
+            if (message.StartsWith(RawFileReader.GET_SCAN_DATA_WARNING))
+            {
+                ShowWarningMessage(message, 0);
+            }
+            else
+            {
+                ShowWarningMessage(message);
+            }
+
+
         }
 
         private static void ShowErrorMessage(string message, Exception ex = null)
@@ -154,9 +171,9 @@ namespace ThermoPeakDataExporter
             ConsoleMsgUtils.ShowError(message, ex);
         }
 
-        private static void ShowWarningMessage(string message)
+        private static void ShowWarningMessage(string message, int emptyLinesBeforeMessage = 1)
         {
-            ConsoleMsgUtils.ShowWarning(message);
+            ConsoleMsgUtils.ShowWarning(message, emptyLinesBeforeMessage);
         }
     }
 }
