@@ -4,6 +4,17 @@ The ThermoPeakDataExporter extracts peak intensity data
 from each scan in a Thermo raw file, and writes that data
 to a tab-delimited text file.
 
+## Requirements
+
+ThermoPeakDataExporter reads data from Thermo .raw files using PNNL's 
+Thermo Raw File Reader, which is a .NET DLL wrapper for Thermo's MS File Reader.
+ThermoPeakDataExporter requires that you download and install MS File Reader from Thermo.
+To do this, create an account at https://thermo.flexnetoperations.com/control/thmo/login then 
+login and choose `Utility Software`.  Next, click `MS File Reader 3.1 SP2`
+then download `MSFileReader_x64.exe`.  SP4 and SP3 are also available and may work,
+but we have had some systems where SP2 works while SP4 and SP3 do not work.
+
+
 ## Program Syntax
 
 ```
