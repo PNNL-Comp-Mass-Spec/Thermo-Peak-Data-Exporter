@@ -64,7 +64,6 @@ namespace ThermoPeakDataExporter
 
             try
             {
-
                 foreach (var scan in data)
                 {
                     currentScanNumber = scan.ScanNumber;
@@ -86,7 +85,6 @@ namespace ThermoPeakDataExporter
                 OnWarningEvent(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 return false;
             }
-
         }
     }
 }

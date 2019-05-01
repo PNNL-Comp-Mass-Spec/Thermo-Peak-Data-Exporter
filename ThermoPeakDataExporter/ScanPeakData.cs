@@ -107,6 +107,5 @@ namespace ThermoPeakDataExporter
                 Map(x => x.RelativeIntensity).Name("RelativeIntensity").TypeConverter(new DoubleConverter(4));
             }
         }
-
     }
 }

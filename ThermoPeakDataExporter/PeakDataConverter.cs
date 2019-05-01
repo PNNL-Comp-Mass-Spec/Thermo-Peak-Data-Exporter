@@ -65,7 +65,5 @@ namespace ThermoPeakDataExporter
 
             return string.Empty;
         }
-
     }
-
 }

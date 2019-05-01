@@ -63,7 +63,6 @@ namespace ThermoPeakDataExporter
 
             return version;
         }
-
         public void OutputSetOptions()
         {
             Console.WriteLine("ThermoPeakDataExporter, version " + GetAppVersion());
@@ -99,7 +98,6 @@ namespace ThermoPeakDataExporter
 
         public bool ValidateArgs()
         {
-
             if (string.IsNullOrWhiteSpace(RawFilePath))
             {
                 ConsoleMsgUtils.ShowError("Raw file path is not defined");

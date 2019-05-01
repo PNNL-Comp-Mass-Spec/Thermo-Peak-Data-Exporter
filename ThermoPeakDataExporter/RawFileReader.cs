@@ -54,7 +54,6 @@ namespace ThermoPeakDataExporter
             var currentTask = "Initializing";
             try
             {
-
                 if (mRawFileReader == null)
                 {
                     currentTask = "Opening the .raw file";
@@ -70,7 +69,6 @@ namespace ThermoPeakDataExporter
                 {
                     options.MaxScan = ScanMax;
                 }
-
             }
             catch (Exception ex)
             {
@@ -113,8 +111,6 @@ namespace ThermoPeakDataExporter
                     MaxIntensity = maxInt
                 };
             }
-
-
         }
 
         /// <summary>
@@ -179,7 +175,6 @@ namespace ThermoPeakDataExporter
             }
 
             return data;
-
         }
     }
 }

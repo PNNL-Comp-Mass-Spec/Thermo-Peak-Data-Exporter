@@ -25,7 +25,6 @@ namespace ThermoPeakDataExporter
                 var exeName = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
                 var version = CommandLineOptions.GetAppVersion();
 
-
                 var parser = new CommandLineParser<CommandLineOptions>(asmName.Name, version)
                 {
                     ProgramInfo = "This program extracts peak intensity data from a Thermo raw file, " +
@@ -43,7 +42,6 @@ namespace ThermoPeakDataExporter
                         exeName + " Dataset.raw /minSN:2"
                     }
                 };
-
 
                 var parseResults = parser.ParseArgs(args);
                 var options = parseResults.ParsedResults;
@@ -116,9 +114,7 @@ namespace ThermoPeakDataExporter
                 ShowErrorMessage(string.Format("Exception {0}: {1}", currentTask, ex.Message), ex);
                 return -10;
             }
-
         }
-
         private static void RegisterEvents(EventNotifier processingClass)
         {
             processingClass.ProgressUpdate += ProcessingClass_ProgressUpdate;
@@ -126,7 +122,6 @@ namespace ThermoPeakDataExporter
             processingClass.ErrorEvent += ProcessingClass_ErrorEvent;
             processingClass.WarningEvent += ProcessingClass_WarningEvent;
         }
-
         private static void ProcessingClass_ProgressUpdate(string progressMessage, float percentComplete)
         {
             if (DateTime.UtcNow.Subtract(mLastProgress).TotalSeconds < 1)
@@ -140,18 +135,15 @@ namespace ThermoPeakDataExporter
             const int emptyLinesBeforeMessage = 0;
             ConsoleMsgUtils.ShowDebug(string.Format("{0:F1}% finished: {1}", percentComplete, progressMessage), "  ", emptyLinesBeforeMessage);
         }
-
         private static void ProcessingClass_DebugEvent(string message)
         {
             const int emptyLinesBeforeMessage = 0;
             ConsoleMsgUtils.ShowDebug(message, "  ", emptyLinesBeforeMessage);
         }
-
         private static void ProcessingClass_ErrorEvent(string message, Exception ex)
         {
             ShowErrorMessage(message, ex);
         }
-
         private static void ProcessingClass_WarningEvent(string message)
         {
             if (message.StartsWith(RawFileReader.GET_SCAN_DATA_WARNING))
@@ -162,8 +154,6 @@ namespace ThermoPeakDataExporter
             {
                 ShowWarningMessage(message);
             }
-
-
         }
 
         private static void ShowErrorMessage(string message, Exception ex = null)
