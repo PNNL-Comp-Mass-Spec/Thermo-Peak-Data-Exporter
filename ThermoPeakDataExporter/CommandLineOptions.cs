@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using PRISM;
 
@@ -31,6 +33,9 @@ namespace ThermoPeakDataExporter
         [Option("tsv", "out", "o", ArgPosition = 2, HelpText = "Name/path of output file (Default: raw_file_name.tsv", HelpShowsDefault = false)]
         public string OutputPath { get; set; }
 
+        [Option("r", "recurse", HelpText = "If specified, also searches subdirectories for .raw files")]
+        public bool Recurse { get; set; }
+
         [Option("minInt", "minIntensity", HelpText = "Minimum intensity threshold (absolute value)")]
         public double MinIntensityThreshold { get; set; }
 
@@ -57,20 +62,22 @@ namespace ThermoPeakDataExporter
         [Option("minSN", "minSignalToNoise", HelpText = "Minimum S/N ratio")]
         public double SignalToNoiseThreshold { get; set; }
 
+        public List<string> FilePaths { get; } = new List<string>();
+
         public static string GetAppVersion()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version + " (" + PROGRAM_DATE + ")";
 
             return version;
         }
-        public void OutputSetOptions()
+        public void OutputSetOptions(string inputFilePath, string outputFilePath)
         {
             Console.WriteLine("ThermoPeakDataExporter, version " + GetAppVersion());
             Console.WriteLine();
             Console.WriteLine("Using options:");
 
-            Console.WriteLine(" Thermo Instrument file: {0}", RawFilePath);
-            Console.WriteLine(" Output file: {0}", OutputPath);
+            Console.WriteLine(" Thermo Instrument file: {0}", inputFilePath);
+            Console.WriteLine(" Output file: {0}", outputFilePath);
 
             if (MinIntensityThreshold > 0)
                 Console.WriteLine(" Minimum Intensity: {0:F1}", MinIntensityThreshold);
@@ -96,6 +103,17 @@ namespace ThermoPeakDataExporter
             Console.WriteLine();
         }
 
+        public string GetOutputPath(string inputPath)
+        {
+            if (FilePaths.Count == 1 && !string.IsNullOrWhiteSpace(OutputPath))
+            {
+                return OutputPath;
+            }
+
+            // TODO: support OutputPath that is a folder
+            return Path.ChangeExtension(inputPath, "tsv");
+        }
+
         public bool ValidateArgs()
         {
             if (string.IsNullOrWhiteSpace(RawFilePath))
@@ -104,14 +122,53 @@ namespace ThermoPeakDataExporter
                 return false;
             }
 
-            if (!File.Exists(RawFilePath))
+            var directories = new List<string>();
+            if (RawFilePath.Contains("*") || RawFilePath.Contains("?"))
             {
-                ConsoleMsgUtils.ShowError(string.Format("ERROR: raw file \"{0}\" does not exist.", RawFilePath));
+                // split the path according to the portions that have wildcards
+                // add matching files to FilePaths, matching directories to directories
+                var matches = ProcessWildCardPath(RawFilePath, ".raw");
+                foreach (var match in matches)
+                {
+                    if (File.Exists(match))
+                    {
+                        FilePaths.Add(match);
+                    }
+                    else if (Directory.Exists(match))
+                    {
+                        directories.Add(match);
+                    }
+                }
+            }
+            else if (Directory.Exists(RawFilePath))
+            {
+                directories.Add(RawFilePath);
+            }
+            else if (File.Exists(RawFilePath))
+            {
+                if (!RawFilePath.ToLower().EndsWith(".raw"))
+                {
+                    ConsoleMsgUtils.ShowError("ERROR: file \"{0}\" is not a raw file.", RawFilePath);
+                    return false;
+                }
+
+                FilePaths.Add(RawFilePath);
+            }
+            else
+            {
+                ConsoleMsgUtils.ShowError("ERROR: raw file \"{0}\" does not exist.", RawFilePath);
                 return false;
             }
-            if (!RawFilePath.ToLower().EndsWith(".raw"))
+
+            var searchOption = Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            foreach (var directory in directories)
             {
-                ConsoleMsgUtils.ShowError(string.Format("ERROR: file \"{0}\" is not a raw file.", RawFilePath));
+                FilePaths.AddRange(Directory.GetFiles(directory, "*.raw", searchOption));
+            }
+
+            if (FilePaths.Count == 0)
+            {
+                ConsoleMsgUtils.ShowError("ERROR: No raw files found in the provided path.");
                 return false;
             }
 
@@ -122,19 +179,92 @@ namespace ThermoPeakDataExporter
 
             if (MinScan > MaxScan)
             {
-                Console.WriteLine("ERROR: minScan cannot be greater than maxScan!, {0} > {1}", MinScan, MaxScan);
+                ConsoleMsgUtils.ShowError("ERROR: minScan cannot be greater than maxScan!, {0} > {1}", MinScan, MaxScan);
                 return false;
             }
 
             if (MinMz > MaxMz)
             {
-                Console.WriteLine("ERROR: minMz cannot be greater than maxMz!, {0} > {1}", MinMz, MaxMz);
+                ConsoleMsgUtils.ShowError("ERROR: minMz cannot be greater than maxMz!, {0} > {1}", MinMz, MaxMz);
                 return false;
             }
 
             MinRelIntensityThresholdRatio = MinRelIntensityThreshold / 100d;
 
             return true;
+        }
+
+        public static List<string> ProcessWildCardPath(string wildCardPath, string requiredFileExtension)
+        {
+            var results = new List<string>();
+            // split the path according to the portions that have wildcards
+            var split = wildCardPath.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var basePath = ".";
+            if (!split[0].Contains("*") && !split[0].Contains("?"))
+            {
+                var pathParts = new List<string>();
+                foreach (var part in split)
+                {
+                    if (part.Contains("*") || part.Contains("?"))
+                    {
+                        break;
+                    }
+                    pathParts.Add(part);
+                }
+
+                basePath = Path.Combine(pathParts.ToArray());
+                split = split.Skip(pathParts.Count).ToArray();
+            }
+
+            results.AddRange(ProcessWildCardPathSplit(basePath, split, requiredFileExtension));
+
+            return results;
+        }
+
+        private static List<string> ProcessWildCardPathSplit(string basePath, string[] parts, string requiredFileExtension)
+        {
+            var results = new List<string>();
+
+            if (parts.Length == 0)
+            {
+                if ((File.Exists(basePath) && basePath.EndsWith(requiredFileExtension, StringComparison.OrdinalIgnoreCase))
+                    || Directory.Exists(basePath))
+                {
+                    results.Add(basePath);
+                }
+                return results;
+            }
+
+            // process only the current part, pass following parts to recursive call
+
+            var part = parts[0];
+            if (!part.Contains("*") && !part.Contains("?"))
+            {
+                results.AddRange(ProcessWildCardPathSplit(Path.Combine(basePath, part), parts.Skip(1).ToArray(), requiredFileExtension));
+                return results;
+            }
+
+            if (parts.Length == 1)
+            {
+                if (part.EndsWith(requiredFileExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    results.AddRange(Directory.GetFiles(basePath, part));
+                }
+                else
+                {
+                    results.AddRange(Directory.GetDirectories(basePath, part));
+                }
+
+                return results;
+            }
+
+            var subParts = parts.Skip(1).ToArray();
+            foreach (var path in Directory.GetDirectories(basePath, part))
+            {
+                results.AddRange(ProcessWildCardPathSplit(Path.Combine(basePath, path), subParts, requiredFileExtension));
+            }
+
+            return results;
         }
     }
 }
