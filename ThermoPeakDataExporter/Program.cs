@@ -142,8 +142,7 @@ namespace ThermoPeakDataExporter
             // Example progress message:
             // 23.4% finished: Processing scan 34
 
-            const int emptyLinesBeforeMessage = 0;
-            ConsoleMsgUtils.ShowDebug(string.Format("{0:F1}% finished: {1}", percentComplete, progressMessage), "  ", emptyLinesBeforeMessage);
+            ConsoleMsgUtils.ShowDebugCustom(string.Format("{0:F1}% finished: {1}", percentComplete, progressMessage), emptyLinesBeforeMessage: 0);
         }
 
         private static void ProcessingClass_DebugEvent(string message)
