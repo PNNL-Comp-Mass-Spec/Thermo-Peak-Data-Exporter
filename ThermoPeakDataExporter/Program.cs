@@ -148,8 +148,7 @@ namespace ThermoPeakDataExporter
 
         private static void ProcessingClass_DebugEvent(string message)
         {
-            const int emptyLinesBeforeMessage = 0;
-            ConsoleMsgUtils.ShowDebug(message, "  ", emptyLinesBeforeMessage);
+            ConsoleMsgUtils.ShowDebugCustom(message, emptyLinesBeforeMessage: 0);
         }
 
         private static void ProcessingClass_ErrorEvent(string message, Exception ex)
@@ -176,7 +175,7 @@ namespace ThermoPeakDataExporter
 
         private static void ShowWarningMessage(string message, int emptyLinesBeforeMessage = 1)
         {
-            ConsoleMsgUtils.ShowWarning(message, emptyLinesBeforeMessage);
+            ConsoleMsgUtils.ShowWarningCustom(message, emptyLinesBeforeMessage);
         }
     }
 }
