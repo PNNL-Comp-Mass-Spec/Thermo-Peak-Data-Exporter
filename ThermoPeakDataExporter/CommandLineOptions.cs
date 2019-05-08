@@ -9,7 +9,7 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        private const string PROGRAM_DATE = "May 7, 2019";
+        private const string PROGRAM_DATE = "May 8, 2019";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 
@@ -114,11 +114,11 @@ namespace ThermoPeakDataExporter
             return Path.ChangeExtension(inputPath, "tsv");
         }
 
-        public bool ValidateArgs()
+        public bool ValidateArgs(out string errorMessage)
         {
             if (string.IsNullOrWhiteSpace(RawFilePath))
             {
-                ConsoleMsgUtils.ShowError("Raw file path is not defined");
+                errorMessage = "Raw file path is not defined";
                 return false;
             }
 
@@ -148,7 +148,7 @@ namespace ThermoPeakDataExporter
             {
                 if (!RawFilePath.ToLower().EndsWith(".raw"))
                 {
-                    ConsoleMsgUtils.ShowError("ERROR: file \"{0}\" is not a raw file.", RawFilePath);
+                    errorMessage = string.Format("ERROR: file \"{0}\" is not a raw file.", RawFilePath);
                     return false;
                 }
 
@@ -156,7 +156,7 @@ namespace ThermoPeakDataExporter
             }
             else
             {
-                ConsoleMsgUtils.ShowError("ERROR: raw file \"{0}\" does not exist.", RawFilePath);
+                errorMessage = string.Format("ERROR: raw file \"{0}\" does not exist.", RawFilePath);
                 return false;
             }
 
@@ -168,7 +168,7 @@ namespace ThermoPeakDataExporter
 
             if (FilePaths.Count == 0)
             {
-                ConsoleMsgUtils.ShowError("ERROR: No raw files found in the provided path.");
+                errorMessage = "ERROR: No raw files found in the provided path.";
                 return false;
             }
 
@@ -179,18 +179,19 @@ namespace ThermoPeakDataExporter
 
             if (MinScan > MaxScan)
             {
-                ConsoleMsgUtils.ShowError("ERROR: minScan cannot be greater than maxScan!, {0} > {1}", MinScan, MaxScan);
+                errorMessage = string.Format("ERROR: minScan cannot be greater than maxScan!, {0} > {1}", MinScan, MaxScan);
                 return false;
             }
 
             if (MinMz > MaxMz)
             {
-                ConsoleMsgUtils.ShowError("ERROR: minMz cannot be greater than maxMz!, {0} > {1}", MinMz, MaxMz);
+                errorMessage = string.Format("ERROR: minMz cannot be greater than maxMz!, {0} > {1}", MinMz, MaxMz);
                 return false;
             }
 
             MinRelIntensityThresholdRatio = MinRelIntensityThreshold / 100d;
 
+            errorMessage = string.Empty;
             return true;
         }
 
