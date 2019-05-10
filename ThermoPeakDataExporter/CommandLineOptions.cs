@@ -9,7 +9,7 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        private const string PROGRAM_DATE = "May 8, 2019";
+        private const string PROGRAM_DATE = "May 9, 2019";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 
