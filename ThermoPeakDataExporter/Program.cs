@@ -48,6 +48,7 @@ namespace ThermoPeakDataExporter
 
                 if (!parseResults.Success)
                 {
+                    // Error messages should have already been shown to the user
                     Thread.Sleep(1500);
                     return -1;
                 }
