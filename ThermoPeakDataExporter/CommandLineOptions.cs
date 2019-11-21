@@ -27,19 +27,23 @@ namespace ThermoPeakDataExporter
             SignalToNoiseThreshold = 0;
         }
 
-        [Option("raw", "i", ArgPosition = 1, Required = true, HelpText = "Path to .raw file", HelpShowsDefault = false)]
+        [Option("InputFile", "raw", "i", ArgPosition = 1, Required = true, IsInputFilePath = true,
+            HelpText = "Path to a Thermo .raw file; supports wildcards. " +
+                       "Can alternatively be a path to a directory with .raw files.", HelpShowsDefault = false)]
         public string RawFilePath { get; set; }
 
-        [Option("tsv", "out", "o", ArgPosition = 2, HelpText = "Name/path of output file (Default: raw_file_name.tsv", HelpShowsDefault = false)]
+        [Option("OutputFile", "tsv", "out", "o", ArgPosition = 2,
+            HelpText = "Name/path of the output file (Default: raw_file_name.tsv). " +
+                       "If processing a single file, this can alternatively be a path to an existing directory.", HelpShowsDefault = false)]
         public string OutputPath { get; set; }
 
-        [Option("r", "recurse", HelpText = "If specified, also searches subdirectories for .raw files")]
+        [Option("Recurse", "R", HelpText = "If specified, also searches subdirectories for .raw files")]
         public bool Recurse { get; set; }
 
-        [Option("minInt", "minIntensity", HelpText = "Minimum intensity threshold (absolute value)")]
+        [Option("MinIntensity", "MinInt", HelpText = "Minimum intensity threshold (absolute value)")]
         public double MinIntensityThreshold { get; set; }
 
-        [Option("minRelInt", "minRelIntensity", HelpText = "Minimum relative intensity threshold (value between 0 and 99)", Min = 0, Max = 99)]
+        [Option("MinRelIntensity", "MinRelInt", HelpText = "Minimum relative intensity threshold (value between 0 and 99)", Min = 0, Max = 99)]
         public double MinRelIntensityThreshold { get; set; }
 
         /// <summary>
@@ -47,19 +51,19 @@ namespace ThermoPeakDataExporter
         /// </summary>
         public double MinRelIntensityThresholdRatio { get; private set; }
 
-        [Option("minScan", HelpText = "First scan to output")]
+        [Option("MinScan", HelpText = "First scan to output")]
         public int MinScan { get; set; }
 
-        [Option("maxScan", HelpText = "Last scan to output")]
+        [Option("MaxScan", HelpText = "Last scan to output")]
         public int MaxScan { get; set; }
 
-        [Option("minMz", HelpText = "Lowest m/z to output")]
+        [Option("MinMz", HelpText = "Lowest m/z to output")]
         public double MinMz { get; set; }
 
-        [Option("maxMz", HelpText = "Highest m/z to output")]
+        [Option("MaxMz", HelpText = "Highest m/z to output")]
         public double MaxMz { get; set; }
 
-        [Option("minSN", "minSignalToNoise", HelpText = "Minimum S/N ratio")]
+        [Option("MinSignalToNoise", "MinSN", HelpText = "Minimum S/N ratio")]
         public double SignalToNoiseThreshold { get; set; }
 
         public List<string> FilePaths { get; } = new List<string>();
