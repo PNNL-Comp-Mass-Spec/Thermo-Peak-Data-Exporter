@@ -20,6 +20,7 @@ ThermoPeakDataExporter.exe
  [/MinScan:ScanStart] [/MaxScan:ScanEnd]
  [/MinMz:MzStart] [/MaxMz:MzEnd]
  [/MinSN:MinimumSignalToNoiseRatio]
+ [/LoadMethod:True] [/LoadTune:True]
  [/ParamFile:ParamFileName.conf] [/CreateParamFile]
 ```
 
@@ -41,6 +42,12 @@ Use `/MinScan` and `/MaxScan` to limit the scan range of the exported data
 Use `/MinMz` and `/MaxMz` to limit the m/Z range of the exported data
 
 Use `/MinSN` to specify a minimum signal to noise ratio (minimum S/N)
+
+Use `/LoadMethod:False` to disable loading the instrument method
+* This can be useful for corrupt .raw files
+
+Use `/LoadTune:False` to disable loading the tune data
+* This can be useful for corrupt .raw files
 
 The processing options can be specified in a parameter file using `/ParamFile:Options.conf`
 * Define options using the format `ArgumentName=Value`
