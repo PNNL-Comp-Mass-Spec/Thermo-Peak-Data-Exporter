@@ -9,7 +9,7 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        private const string PROGRAM_DATE = "May 9, 2019";
+        private const string PROGRAM_DATE = "November 20, 2019";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 
@@ -111,10 +111,18 @@ namespace ThermoPeakDataExporter
         {
             if (FilePaths.Count == 1 && !string.IsNullOrWhiteSpace(OutputPath))
             {
+                var directoryToCheck = new DirectoryInfo(OutputPath);
+                if (directoryToCheck.Exists)
+                {
+                    // Output path is a directory
+                    return Path.Combine(directoryToCheck.FullName, Path.GetFileNameWithoutExtension(inputPath) + ".tsv");
+                }
+
+                // Assume the output path is a file
                 return OutputPath;
             }
 
-            // TODO: support OutputPath that is a folder
+            // Create the tsv file in the same directory as the input file
             return Path.ChangeExtension(inputPath, "tsv");
         }
 
@@ -129,7 +137,7 @@ namespace ThermoPeakDataExporter
             var directories = new List<string>();
             if (RawFilePath.Contains("*") || RawFilePath.Contains("?"))
             {
-                // split the path according to the portions that have wildcards
+                // Split the path according to the portions that have wildcards
                 // add matching files to FilePaths, matching directories to directories
                 var matches = ProcessWildCardPath(RawFilePath, ".raw");
                 foreach (var match in matches)
