@@ -98,7 +98,7 @@ namespace ThermoPeakDataExporter
                         RegisterEvents(tsvWriter);
 
                         currentTask = "opening the .raw file";
-                        rawReader.LoadFile();
+                        rawReader.LoadFile(options);
 
                         var scanCount = rawReader.ScanMax;
 

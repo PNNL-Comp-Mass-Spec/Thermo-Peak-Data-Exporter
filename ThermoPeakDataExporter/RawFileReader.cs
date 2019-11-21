@@ -31,9 +31,16 @@ namespace ThermoPeakDataExporter
         /// <summary>
         /// Open the raw file with a new instance of XRawFileIO
         /// </summary>
-        public void LoadFile()
+        /// <param name="options"></param>
+        public void LoadFile(CommandLineOptions options)
         {
-            mRawFileReader = new XRawFileIO();
+            var readerOptions = new ThermoReaderOptions {
+                LoadMSMethodInfo = options.LoadMethodInfo,
+                LoadMSTuneInfo = options.LoadTuneData
+            };
+
+            mRawFileReader = new XRawFileIO(readerOptions);
+
             mRawFileReader.OpenRawFile(mFilePath);
             ScanMin = 1;
             ScanMax = mRawFileReader.GetNumScans();
@@ -57,7 +64,7 @@ namespace ThermoPeakDataExporter
                 if (mRawFileReader == null)
                 {
                     currentTask = "Opening the .raw file";
-                    LoadFile();
+                    LoadFile(options);
                 }
 
                 currentTask = "Validating the scan range";

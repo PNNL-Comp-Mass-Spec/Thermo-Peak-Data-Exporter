@@ -25,6 +25,8 @@ namespace ThermoPeakDataExporter
             MinMz = 0;
             MaxMz = DEFAULT_MAX_MZ;
             SignalToNoiseThreshold = 0;
+            LoadMethodInfo = true;
+            LoadTuneData = true;
         }
 
         [Option("InputFile", "raw", "i", ArgPosition = 1, Required = true, IsInputFilePath = true,
@@ -66,6 +68,12 @@ namespace ThermoPeakDataExporter
         [Option("MinSignalToNoise", "MinSN", HelpText = "Minimum S/N ratio")]
         public double SignalToNoiseThreshold { get; set; }
 
+        [Option("LoadMethodInfo", "LoadMethod", HelpText = "Controls whether the instrument method is read")]
+        public bool LoadMethodInfo { get; set; }
+
+        [Option("LoadTuneData", "LoadTune", HelpText = "Controls whether tune data is read")]
+        public bool LoadTuneData { get; set; }
+
         public List<string> FilePaths { get; } = new List<string>();
 
         public static string GetAppVersion()
@@ -103,6 +111,12 @@ namespace ThermoPeakDataExporter
 
             if (SignalToNoiseThreshold > 0)
                 Console.WriteLine(" Minimum S/N: {0:F1}", SignalToNoiseThreshold);
+
+            if (!LoadMethodInfo)
+                Console.WriteLine(" Will not load method info from the .raw file");
+
+            if (!LoadTuneData)
+                Console.WriteLine(" Will not load tune data from the .raw file");
 
             Console.WriteLine();
         }
