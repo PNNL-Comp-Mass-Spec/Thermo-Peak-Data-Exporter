@@ -25,7 +25,10 @@ namespace ThermoPeakDataExporter
         public ScanPeakDataWriter(string outputPath)
         {
             FilePath = outputPath;
-            mWriter = new CsvWriter(new StreamWriter(new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)));
+            mWriter = new CsvWriter(
+                new StreamWriter(new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)),
+                System.Globalization.CultureInfo.InvariantCulture);
+
             mWriter.Configuration.RegisterClassMap<ScanPeakData.ScanPeakDataClassMap>();
             mWriter.Configuration.Delimiter = "\t";
         }

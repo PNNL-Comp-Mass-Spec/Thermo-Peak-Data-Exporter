@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CsvHelper">
-      <Version>12.1.2</Version>
+      <Version>15.0.8</Version>
     </PackageReference>
     <PackageReference Include="PRISM-Library">
       <Version>2.6.17</Version>
