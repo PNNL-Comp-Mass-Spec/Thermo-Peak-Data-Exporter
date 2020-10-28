@@ -40,6 +40,7 @@ namespace ThermoPeakDataExporter
             };
 
             mRawFileReader = new XRawFileIO(readerOptions);
+            RegisterEvents(mRawFileReader);
 
             mRawFileReader.OpenRawFile(mFilePath);
             ScanMin = 1;

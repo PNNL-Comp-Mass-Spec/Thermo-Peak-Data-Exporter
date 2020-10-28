@@ -171,6 +171,17 @@ namespace ThermoPeakDataExporter
             {
                 ShowWarningMessage(message);
             }
+
+            if (message.Contains("LoadMSMethodInfo = false"))
+            {
+                var exeName = Path.GetFileName(PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppPath());
+
+                ShowWarningMessage(string.Format(
+                    "    When running {0}, append the following to the command line:\n" +
+                    "     -LoadMethod:false",
+                    exeName));
+                Console.WriteLine();
+            }
         }
 
         private static void ShowErrorMessage(string message, Exception ex = null)
