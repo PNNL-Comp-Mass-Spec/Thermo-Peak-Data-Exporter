@@ -9,7 +9,9 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        private const string PROGRAM_DATE = "April 21, 2020";
+        // Ignore Spelling: tsv
+
+        private const string PROGRAM_DATE = "October 28, 2020";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 
@@ -30,12 +32,12 @@ namespace ThermoPeakDataExporter
         }
 
         [Option("InputFile", "raw", "i", ArgPosition = 1, Required = true, IsInputFilePath = true,
-            HelpText = "Path to a Thermo .raw file; supports wildcards. " +
+            HelpText = "Path to a Thermo .raw file; supports wildcards.\n" +
                        "Can alternatively be a path to a directory with .raw files.", HelpShowsDefault = false)]
         public string RawFilePath { get; set; }
 
         [Option("OutputFile", "tsv", "out", "o", ArgPosition = 2,
-            HelpText = "Name/path of the output file (Default: raw_file_name.tsv). " +
+            HelpText = "Name/path of the output file (Default: raw_file_name.tsv).\n" +
                        "If processing a single file, this can alternatively be a path to an existing directory.", HelpShowsDefault = false)]
         public string OutputPath { get; set; }
 
@@ -82,6 +84,7 @@ namespace ThermoPeakDataExporter
 
             return version;
         }
+
         public void OutputSetOptions(string inputFilePath, string outputFilePath)
         {
             Console.WriteLine("ThermoPeakDataExporter, version " + GetAppVersion());

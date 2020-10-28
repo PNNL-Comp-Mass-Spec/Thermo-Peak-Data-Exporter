@@ -10,6 +10,8 @@ namespace ThermoPeakDataExporter
     /// </summary>
     public class DoubleConverter : ITypeConverter
     {
+        // Ignore Spelling: Csv
+
         private readonly string mFormatSpec;
 
         /// <summary>

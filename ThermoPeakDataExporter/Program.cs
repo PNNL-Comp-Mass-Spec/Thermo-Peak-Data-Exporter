@@ -3,11 +3,14 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using PRISM;
+using PRISM.Logging;
 
 namespace ThermoPeakDataExporter
 {
     public class Program
     {
+        // Ignore Spelling: Bryson, tsv
+
         private static DateTime mLastProgress;
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace ThermoPeakDataExporter
             return 0;
         }
 
-        private static void RegisterEvents(EventNotifier processingClass)
+        private static void RegisterEvents(IEventNotifier processingClass)
         {
             processingClass.ProgressUpdate += ProcessingClass_ProgressUpdate;
             processingClass.DebugEvent += ProcessingClass_DebugEvent;
