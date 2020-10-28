@@ -225,7 +225,7 @@ namespace ThermoPeakDataExporter
         {
             var results = new List<string>();
             // split the path according to the portions that have wildcards
-            var split = wildCardPath.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var split = wildCardPath.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
             var basePath = ".";
             if (!split[0].Contains("*") && !split[0].Contains("?"))
             {
@@ -248,11 +248,11 @@ namespace ThermoPeakDataExporter
             return results;
         }
 
-        private static List<string> ProcessWildCardPathSplit(string basePath, string[] parts, string requiredFileExtension)
+        private static IEnumerable<string> ProcessWildCardPathSplit(string basePath, IReadOnlyList<string> parts, string requiredFileExtension)
         {
             var results = new List<string>();
 
-            if (parts.Length == 0)
+            if (parts.Count == 0)
             {
                 if ((File.Exists(basePath) && basePath.EndsWith(requiredFileExtension, StringComparison.OrdinalIgnoreCase))
                     || Directory.Exists(basePath))
@@ -271,7 +271,7 @@ namespace ThermoPeakDataExporter
                 return results;
             }
 
-            if (parts.Length == 1)
+            if (parts.Count == 1)
             {
                 if (part.EndsWith(requiredFileExtension, StringComparison.OrdinalIgnoreCase))
                 {
