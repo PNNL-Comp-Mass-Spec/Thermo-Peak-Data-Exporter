@@ -172,7 +172,7 @@ namespace ThermoPeakDataExporter
             }
             else if (File.Exists(RawFilePath))
             {
-                if (!RawFilePath.ToLower().EndsWith(".raw"))
+                if (!RawFilePath.EndsWith(".raw", StringComparison.OrdinalIgnoreCase))
                 {
                     errorMessage = string.Format("ERROR: file \"{0}\" is not a raw file.", RawFilePath);
                     return false;
