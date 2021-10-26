@@ -9,9 +9,9 @@ namespace ThermoPeakDataExporter
 {
     public class CommandLineOptions
     {
-        // Ignore Spelling: tsv
+        // Ignore Spelling: tsv, wildcards
 
-        private const string PROGRAM_DATE = "October 28, 2020";
+        private const string PROGRAM_DATE = "October 25, 2021";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 
