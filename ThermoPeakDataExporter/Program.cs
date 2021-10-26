@@ -95,33 +95,32 @@ namespace ThermoPeakDataExporter
                     currentTask = "instantiating RawFileReader and ScanPeakDataWriter";
                     mLastProgress = DateTime.UtcNow;
 
-                    using (var rawReader = new RawFileReader(inputPath))
-                    using (var tsvWriter = new ScanPeakDataWriter(outputPath))
+                    using var rawReader = new RawFileReader(inputPath);
+                    using var tsvWriter = new ScanPeakDataWriter(outputPath);
+
+                    RegisterEvents(rawReader);
+                    RegisterEvents(tsvWriter);
+
+                    currentTask = "opening the .raw file";
+                    rawReader.LoadFile(options);
+
+                    var scanCount = rawReader.ScanMax;
+
+                    currentTask = "reading/writing peaks for each scan";
+
+                    // This method uses a yield return IEnumerable
+                    // Thus, memory usage is minimal and each scan is written right after it is read
+                    var data = rawReader.GetLabelData(options);
+
+                    var success = tsvWriter.Write(data, scanCount);
+
+                    if (!success)
                     {
-                        RegisterEvents(rawReader);
-                        RegisterEvents(tsvWriter);
-
-                        currentTask = "opening the .raw file";
-                        rawReader.LoadFile(options);
-
-                        var scanCount = rawReader.ScanMax;
-
-                        currentTask = "reading/writing peaks for each scan";
-
-                        // This method uses a yield return IEnumerable
-                        // Thus, memory usage is minimal and each scan is written right after it is read
-                        var data = rawReader.GetLabelData(options);
-
-                        var success = tsvWriter.Write(data, scanCount);
-
-                        if (!success)
-                        {
-                            ShowWarningMessage("Writer reports false indicating an error occurred");
-                            return -4;
-                        }
-
-                        Console.WriteLine("Processing complete; created file " + outputPath);
+                        ShowWarningMessage("Writer reports false indicating an error occurred");
+                        return -4;
                     }
+
+                    Console.WriteLine("Processing complete; created file " + outputPath);
                 }
             }
             catch (Exception ex)
