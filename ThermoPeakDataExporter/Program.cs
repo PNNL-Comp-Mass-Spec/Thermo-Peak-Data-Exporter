@@ -36,7 +36,7 @@ namespace ThermoPeakDataExporter
                     ContactInfo = "Program written by Bryson Gibbons and Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2016" +
                                   Environment.NewLine + Environment.NewLine +
                                   "E-mail: proteomics@pnnl.gov" + Environment.NewLine +
-                                  "Website: https://omics.pnl.gov or https://panomics.pnnl.gov or https://github.com/PNNL-Comp-Mass-Spec",
+                                  "Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics",
 
                     UsageExamples = {
                         exeName + " Dataset.raw",
