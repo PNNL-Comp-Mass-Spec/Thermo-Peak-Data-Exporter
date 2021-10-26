@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using CsvHelper;
+using CsvHelper.Configuration;
 using PRISM;
 
 namespace ThermoPeakDataExporter
@@ -25,12 +27,17 @@ namespace ThermoPeakDataExporter
         public ScanPeakDataWriter(string outputPath)
         {
             FilePath = outputPath;
+
+            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = "\t"
+            };
+
             mWriter = new CsvWriter(
                 new StreamWriter(new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)),
-                System.Globalization.CultureInfo.InvariantCulture);
+                configuration);
 
-            mWriter.Configuration.RegisterClassMap<ScanPeakData.ScanPeakDataClassMap>();
-            mWriter.Configuration.Delimiter = "\t";
+            mWriter.Context.RegisterClassMap<ScanPeakData.ScanPeakDataClassMap>();
         }
 
         public void Dispose()
