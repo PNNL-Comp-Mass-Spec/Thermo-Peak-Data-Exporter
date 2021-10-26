@@ -126,7 +126,7 @@ namespace ThermoPeakDataExporter
         /// </summary>
         /// <param name="scanNumber"></param>
         /// <returns></returns>
-        private List<udtFTLabelInfoType> GetScanData(int scanNumber)
+        private List<FTLabelInfoType> GetScanData(int scanNumber)
         {
             if (!mRawFileReader.GetScanInfo(scanNumber, out clsScanInfo scanInfo))
                 return null;
@@ -139,7 +139,7 @@ namespace ThermoPeakDataExporter
         /// </summary>
         /// <param name="scanNumber"></param>
         /// <returns></returns>
-        private List<udtFTLabelInfoType> GetLabelData(int scanNumber)
+        private List<FTLabelInfoType> GetLabelData(int scanNumber)
         {
             mRawFileReader.GetScanLabelData(scanNumber, out var labelData);
 
@@ -156,7 +156,7 @@ namespace ThermoPeakDataExporter
         /// </summary>
         /// <param name="scanNumber"></param>
         /// <returns></returns>
-        private List<udtFTLabelInfoType> GetPeakData(int scanNumber)
+        private List<FTLabelInfoType> GetPeakData(int scanNumber)
         {
             const int MAX_NUMBER_OF_PEAKS = 0;
             const bool CENTROID_DATA = true;
@@ -171,10 +171,10 @@ namespace ThermoPeakDataExporter
                 return null;
             }
 
-            var data = new List<udtFTLabelInfoType>(dataCount);
+            var data = new List<FTLabelInfoType>(dataCount);
             for (var i = 0; i < dataCount; i++)
             {
-                var peak = new udtFTLabelInfoType
+                var peak = new FTLabelInfoType
                 {
                     Mass = peakData[0, i],
                     Intensity = peakData[1, i]

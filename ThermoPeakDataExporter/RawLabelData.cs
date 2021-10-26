@@ -18,7 +18,7 @@ namespace ThermoPeakDataExporter
         /// <summary>
         /// Label data (if FTMS), otherwise peak data
         /// </summary>
-        public List<udtFTLabelInfoType> MSData { get; set; }
+        public List<FTLabelInfoType> MSData { get; set; }
 
         /// <summary>
         /// Maximum intensity of the peaks in this scan
