@@ -18,7 +18,7 @@ namespace ThermoPeakDataExporter
         /// </summary>
         /// <param name="args"></param>
         /// <returns>0 if success, otherwise an error code</returns>
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             var currentTask = "initializing";
 
