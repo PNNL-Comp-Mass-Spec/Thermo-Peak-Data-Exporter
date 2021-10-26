@@ -128,7 +128,7 @@ namespace ThermoPeakDataExporter
         /// <returns></returns>
         private List<FTLabelInfoType> GetScanData(int scanNumber)
         {
-            if (!mRawFileReader.GetScanInfo(scanNumber, out clsScanInfo scanInfo))
+            if (!mRawFileReader.GetScanInfo(scanNumber, out var scanInfo))
                 return null;
 
             return scanInfo.IsFTMS ? GetLabelData(scanNumber) : GetPeakData(scanNumber);
@@ -163,7 +163,7 @@ namespace ThermoPeakDataExporter
 
             var dataCount = mRawFileReader.GetScanData2D(scanNumber, out var peakData, MAX_NUMBER_OF_PEAKS, CENTROID_DATA);
 
-            if (peakData.Length <= 0)
+            if (peakData.Length == 0)
             {
                 // Report message: GetScanData2D returned no data for scan 2760
                 // See, for example QC_Shew_13_04_2c_22Sep13_Cougar_13-06-16

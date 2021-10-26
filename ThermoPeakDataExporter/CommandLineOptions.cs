@@ -76,7 +76,7 @@ namespace ThermoPeakDataExporter
         [Option("LoadTuneData", "LoadTune", HelpText = "Controls whether tune data is read")]
         public bool LoadTuneData { get; set; }
 
-        public List<string> FilePaths { get; } = new List<string>();
+        public List<string> FilePaths { get; } = new();
 
         public static string GetAppVersion()
         {
