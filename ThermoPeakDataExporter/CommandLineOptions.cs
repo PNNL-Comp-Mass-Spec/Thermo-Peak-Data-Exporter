@@ -11,7 +11,7 @@ namespace ThermoPeakDataExporter
     {
         // Ignore Spelling: tsv, wildcards
 
-        private const string PROGRAM_DATE = "October 25, 2021";
+        private const string PROGRAM_DATE = "November 11, 2021";
 
         private const int DEFAULT_MAX_MZ = 10000000;
 

@@ -46,11 +46,17 @@ namespace ThermoPeakDataExporter
                     }
                 };
 
-                var parseResults = parser.ParseArgs(args);
-                var options = parseResults.ParsedResults;
+                var result = parser.ParseArgs(args);
+                var options = result.ParsedResults;
 
-                if (!parseResults.Success)
+                if (!result.Success)
                 {
+                    if (parser.CreateParamFileProvided)
+                    {
+                        return 0;
+                    }
+
+                    // Delay for 1500 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
                     // Error messages should have already been shown to the user
                     Thread.Sleep(1500);
                     return -1;
